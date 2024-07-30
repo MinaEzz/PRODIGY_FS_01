@@ -79,7 +79,7 @@ const Signup = ({ setAuthType }) => {
 
       <button
         type="submit"
-        className="w-full btn border-primary-600 bg-primary-600 hover:bg-primary-900 hover:border-primary-900 text-white capitalize text-2xl outline-none"
+        className="w-full btn border-primary-600 bg-primary-600 hover:bg-primary-900 hover:border-primary-900 text-white capitalize text-2xl outline-none font-bold"
       >
         register
       </button>
@@ -88,7 +88,7 @@ const Signup = ({ setAuthType }) => {
       </p>
       <button
         type="button"
-        className="w-full btn border-primary-600 bg-transparent hover:bg-primary-900 hover:border-primary-900 text-primary-900 hover:text-white capitalize text-2xl"
+        className="w-full btn border-primary-600 bg-transparent hover:bg-primary-900 hover:border-primary-900 text-primary-900 hover:text-white capitalize text-2xl font-semibold"
         onClick={() => setAuthType("login")}
       >
         login

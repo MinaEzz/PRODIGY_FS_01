@@ -14,6 +14,16 @@ export default {
         "primary-900": "#62188b",
         "primary-950": "#440467",
       },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: "1rem",
+          sm: "2rem",
+          lg: "0.2rem",
+          xl: "5rem",
+          "2xl": "6rem",
+        },
+      },
     },
   },
   plugins: [daisyui],
