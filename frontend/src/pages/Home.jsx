@@ -12,19 +12,28 @@ const Home = () => {
         </h1>
         <div className=" space-y-4">
           <p className="text-black text-lg capitalize">
-            This is a simple MERN (MongoDB, Express, React, Node.js) application
+            Welcome to our MERN (MongoDB, Express, React, Node.js) application!
             <br />
-            showcasing a user registration and login functionality. The app uses
-            JWT for authentication. Please register a new user and log in to
-            access the protected routes.
+            This app demonstrates user registration and login functionalities
+            with JWT authentication. Please register a new user and log in to
+            access protected routes.
           </p>
           <p className="text-black text-lg capitalize">
-            the frontend of the application is build with React.
+            The frontend is built with React, utilizing Daisy UI, React Query,
+            and Tailwind CSS for a modern and responsive user experience.
             <br />
-            the backend is build with Node.js, express and uses MongoDB as the
-            database.
+            The backend is powered by Node.js, Express, and MongoDB, with
+            Mongoose for data modeling.
             <br />
-            authentication is implemented using JSON web token (JWT).
+            Authentication is implemented using JSON Web Tokens (JWT) for secure
+            access.
+          </p>
+          <p className="text-black text-lg capitalize">
+            Our app includes client-side validation for the login and signup
+            pages, ensuring a smooth user experience.
+            <br />
+            Additionally, server-side validation guarantees data integrity and
+            security.
           </p>
         </div>
       </div>

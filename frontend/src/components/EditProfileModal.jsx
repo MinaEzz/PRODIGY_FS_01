@@ -1,10 +1,38 @@
 import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
+import { useMutation, useQuery } from "react-query";
+import EditProfileMutation from "../mutations/EditProfileMutation";
+import LoadingSpinner from "./LoadingSpinner";
 
 const EditProfileModal = () => {
+  const { data: authUserData } = useQuery({ queryKey: ["authUser"] });
+  const [formData, setFormData] = useState({
+    username: authUserData?.data?.user?.username,
+    email: authUserData?.data?.user?.email,
+    currentPassword: "",
+    newPassword: "",
+  });
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const {
+    mutate: updateProfile,
+    isLoading,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: EditProfileMutation,
+    onSuccess: () => {
+      enqueueSnackbar("Saved Successfully", { variant: "success" });
+      document.getElementById("my_modal_2").close();
+    },
+    retry: false,
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    enqueueSnackbar("Saved Successfully", { variant: "success" });
-    document.getElementById("my_modal_2").close();
+    updateProfile(formData);
   };
 
   return (
@@ -28,7 +56,14 @@ const EditProfileModal = () => {
           >
             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
           </svg>
-          <input type="text" className="grow" placeholder="Username" />
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleInputChange}
+            className="grow"
+          />
         </label>
         <label className="input input-bordered flex items-center gap-2 w-full">
           <svg
@@ -40,7 +75,14 @@ const EditProfileModal = () => {
             <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
             <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
           </svg>
-          <input type="text" className="grow" placeholder="Email" />
+          <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleInputChange}
+            className="grow"
+          />
         </label>
         <label className="input input-bordered flex items-center gap-2 w-full">
           <svg
@@ -55,7 +97,14 @@ const EditProfileModal = () => {
               clipRule="evenodd"
             />
           </svg>
-          <input type="password" className="grow" placeholder="Old Password" />
+          <input
+            type="password"
+            name="currentPassword"
+            placeholder="Current Password"
+            value={formData.currentPassword}
+            onChange={handleInputChange}
+            className="grow"
+          />
         </label>
         <label className="input input-bordered flex items-center gap-2 w-full">
           <svg
@@ -70,13 +119,28 @@ const EditProfileModal = () => {
               clipRule="evenodd"
             />
           </svg>
-          <input type="password" className="grow" placeholder="New Password" />
+          <input
+            type="password"
+            name="newPassword"
+            placeholder="New Password"
+            value={formData.newPassword}
+            onChange={handleInputChange}
+            className="grow"
+          />
         </label>
+
+        {isError && (
+          <p className="text-lg text-red-600 capitalize font-semibold">
+            {" "}
+            {error.message}{" "}
+          </p>
+        )}
+
         <button
           type="submit"
           className="w-full btn border-primary-600 bg-primary-600 hover:bg-primary-900 hover:border-primary-900 text-white capitalize text-2xl outline-none font-medium"
         >
-          save changes
+          {isLoading ? <LoadingSpinner size={"lg"} /> : "save changes"}
         </button>
       </form>
       <form method="dialog" className="modal-backdrop">

@@ -1,9 +1,39 @@
 import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import LoadingSpinner from "../LoadingSpinner";
+import LoginMutation from "../../mutations/auth/LoginMutation";
+import { validateLogin } from "../../validations/validation";
 
 const Login = ({ setAuthType }) => {
+  const queryClient = useQueryClient();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const {
+    mutate: login,
+    isLoading,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: LoginMutation,
+    onSuccess: () => {
+      enqueueSnackbar("Logged in successfully", { variant: "success" });
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
+    retry: false,
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    enqueueSnackbar("Login successfully", { variant: "success" });
+    if (!validateLogin(formData)) return;
+    login(formData);
   };
   const background = {
     backgroundColor: "rgba(255,255,255,0.5)",
@@ -28,7 +58,14 @@ const Login = ({ setAuthType }) => {
         >
           <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
         </svg>
-        <input type="text" className="grow" placeholder="Username" />
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleInputChange}
+          className="grow"
+        />
       </label>
       <label className="input input-bordered flex items-center gap-2 w-full">
         <svg
@@ -43,14 +80,28 @@ const Login = ({ setAuthType }) => {
             clipRule="evenodd"
           />
         </svg>
-        <input type="password" className="grow" placeholder="Password" />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleInputChange}
+          className="grow"
+        />
       </label>
+
+      {isError && (
+        <p className="text-lg text-red-600 capitalize font-semibold">
+          {" "}
+          {error.message}{" "}
+        </p>
+      )}
 
       <button
         type="submit"
         className="w-full btn border-primary-600 bg-primary-600 hover:bg-primary-900 hover:border-primary-900 text-white capitalize text-2xl outline-none font-bold"
       >
-        login
+        {isLoading ? <LoadingSpinner size={"lg"} /> : "login"}
       </button>
       <p className="text-primary-950 capitalize text-lg">
         don't have an account ?
